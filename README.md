@@ -2,7 +2,7 @@
 
 # 🥪 Animated Sandwich
 
-<video src="sandwich.gif" autoplay loop muted playsinline width="400"></video>
+![Animated Sandwich](sandwich.gif)
 
 This project features an animated sandwich with various layers of ingredients, showcasing intricate CSS animations and hover effects.
 
