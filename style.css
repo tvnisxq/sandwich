@@ -1,0 +1,1256 @@
+/*
+ * ========================================================
+ *  THE SANDWICH — CSS 3D Art
+ * ========================================================
+ *  A realistic, animated CSS-only sandwich built with
+ *  3D transforms (rotateX/rotateY), layered pseudo-elements,
+ *  and keyframe animations.
+ *
+ *  Features:
+ *   - Warm gradient background + floating ambient particles
+ *   - Idle floating bob animation on the whole sandwich
+ *   - Page-load "assembly" entrance animation
+ *   - Hover exploded view with spring-bounce easing
+ *   - Ceramic plate with shadow
+ *   - Sesame seeds on the top bun
+ *   - Glossy shine effects on bread, tomato, cheese
+ *   - Onion ring layer
+ *   - Ingredient glow on hover
+ *   - Responsive scaling for mobile
+ * ========================================================
+ */
+
+/* Google Fonts: Kalam (hint text) + Playfair Display (title) */
+@import url("https://fonts.googleapis.com/css2?family=Kalam&family=Playfair+Display:wght@700&display=swap");
+
+/* ─────────────────────────────────────────────────────────
+   DESIGN TOKENS (CSS Custom Properties)
+   Centralised colour palette — easy to tweak or theme.
+───────────────────────────────────────────────────────── */
+:root {
+  /* Bread colours — warm golden tones */
+  --bread-light: #f5debd;
+  --bread-medium: #e8bf9c;
+  --bread-medium-alt: #f3c8a3;
+  --bread-dark: #e4cdab;
+  --bread-darker: #d4aa87;
+  --bread-gradient-light: #e8bb94;
+  --bread-gradient-dark: #daae88;
+
+  /* Lettuce — fresh green */
+  --lettuce-green: #87cc87;
+  --lettuce-dark: #6ab06a;
+
+  /* Tomato — juicy red */
+  --tomato-red: #ff4949;
+  --tomato-dark: #ce4845;
+  --tomato-shine: #ff7070;
+
+  /* Cheese — bright yellow */
+  --cheese-yellow: #ffe359;
+  --cheese-dark: #f0cc30;
+
+  /* Onion — translucent lavender */
+  --onion-outer: #e8d0f0;
+  --onion-inner: #f0e0f6;
+  --onion-ring: #d4a0e8;
+
+  /* Sesame seeds — pale cream */
+  --sesame: #f5eacd;
+  --sesame-dark: #d4c9a0;
+
+  /* Page environment */
+  --bg-top: #fdf6ec;
+  /* warm cream at top */
+  --bg-bottom: #f0e2d0;
+  /* slightly darker at bottom */
+  --plate-color: #faf7f2;
+  --plate-shadow: rgba(180, 150, 120, 0.25);
+  --text-color: #5a3e28;
+  /* deep brown */
+}
+
+/* ─────────────────────────────────────────────────────────
+   BASE RESET & BODY
+   Centres everything vertically + horizontally.
+   Warm gradient from cream to light tan.
+───────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+  /* Warm, appetising background gradient */
+  background: linear-gradient(160deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FLOATING PARTICLES
+   12 small dots that drift upward continuously,
+   each with a different size, colour, speed, and delay
+   so they feel organic and random.
+───────────────────────────────────────────────────────── */
+.particles {
+  position: fixed;
+  inset: 0;
+  /* fills entire viewport */
+  pointer-events: none;
+  /* click-through */
+  z-index: 0;
+}
+
+.particles span {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 8s ease-in-out infinite;
+}
+
+/* Individual particle positioning, colour, timing */
+.particles span:nth-child(1) {
+  width: 6px;
+  height: 6px;
+  left: 10%;
+  background: #ffd98e;
+  animation-delay: 0s;
+  animation-duration: 7s;
+}
+
+.particles span:nth-child(2) {
+  width: 4px;
+  height: 4px;
+  left: 25%;
+  background: #ff9a9a;
+  animation-delay: 1.2s;
+  animation-duration: 9s;
+}
+
+.particles span:nth-child(3) {
+  width: 8px;
+  height: 8px;
+  left: 40%;
+  background: #a8e6a8;
+  animation-delay: 2.5s;
+  animation-duration: 6s;
+}
+
+.particles span:nth-child(4) {
+  width: 5px;
+  height: 5px;
+  left: 55%;
+  background: #ffe88e;
+  animation-delay: 0.8s;
+  animation-duration: 10s;
+}
+
+.particles span:nth-child(5) {
+  width: 3px;
+  height: 3px;
+  left: 70%;
+  background: #ffb3b3;
+  animation-delay: 3.1s;
+  animation-duration: 8s;
+}
+
+.particles span:nth-child(6) {
+  width: 7px;
+  height: 7px;
+  left: 85%;
+  background: #c8f0c8;
+  animation-delay: 1.8s;
+  animation-duration: 7.5s;
+}
+
+.particles span:nth-child(7) {
+  width: 4px;
+  height: 4px;
+  left: 15%;
+  background: #ffd98e;
+  animation-delay: 4s;
+  animation-duration: 9s;
+}
+
+.particles span:nth-child(8) {
+  width: 6px;
+  height: 6px;
+  left: 60%;
+  background: #e8c0f0;
+  animation-delay: 2s;
+  animation-duration: 8.5s;
+}
+
+.particles span:nth-child(9) {
+  width: 5px;
+  height: 5px;
+  left: 35%;
+  background: #ffe066;
+  animation-delay: 3.5s;
+  animation-duration: 7s;
+}
+
+.particles span:nth-child(10) {
+  width: 3px;
+  height: 3px;
+  left: 80%;
+  background: #ff9a9a;
+  animation-delay: 0.5s;
+  animation-duration: 10s;
+}
+
+.particles span:nth-child(11) {
+  width: 7px;
+  height: 7px;
+  left: 48%;
+  background: #b0e8b0;
+  animation-delay: 1.5s;
+  animation-duration: 6.5s;
+}
+
+.particles span:nth-child(12) {
+  width: 4px;
+  height: 4px;
+  left: 92%;
+  background: #ffc070;
+  animation-delay: 2.8s;
+  animation-duration: 9.5s;
+}
+
+/* Particle animation: rise from bottom to top, fade in/out */
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.6;
+  }
+
+  90% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   TITLE & HINT
+   Title uses Playfair Display with a decorative underline.
+   Hint text uses Kalam cursive for a handwritten feel.
+   Both fade-slide-in after page load.
+───────────────────────────────────────────────────────── */
+.title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  /* responsive sizing */
+  color: var(--text-color);
+  margin: 0 0 10px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  opacity: 0;
+  animation: fadeSlideIn 1s 0.3s ease forwards;
+  /* delayed entrance */
+  position: relative;
+  z-index: 2;
+}
+
+/* Decorative underline beneath the title */
+.title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--bread-darker), transparent);
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* "Hover to explore layers" hint */
+.hint {
+  font-family: "Kalam", cursive;
+  font-size: 1rem;
+  color: var(--text-color);
+  opacity: 0;
+  animation: fadeSlideIn 1s 1.6s ease forwards;
+  /* appears last */
+  margin-top: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Shared entrance animation for title & hint */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   SANDWICH CONTAINER (.content)
+   The main wrapper for all sandwich layers.
+   - perspective: 800px creates the 3D viewing angle
+   - sandwichFloat: gentle up-down bob while idle
+   - sandwichAssemble: entrance from below + scale up
+───────────────────────────────────────────────────────── */
+.content {
+  width: 300px;
+  height: 300px;
+  min-width: 300px;
+  perspective: 800px;
+  position: relative;
+  z-index: 1;
+  /* Two animations run together:
+     1. sandwichAssemble plays once on load
+     2. sandwichFloat loops forever for the idle bob */
+  animation: sandwichFloat 4s ease-in-out infinite, sandwichAssemble 1.2s ease-out forwards;
+  cursor: pointer;
+}
+
+/* Idle floating bob — moves ±8px vertically */
+@keyframes sandwichFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* Page-load assembly: fade in + slide up + scale */
+@keyframes sandwichAssemble {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   TABLE SHADOW
+   A blurred radial ellipse beneath the plate to ground
+   the sandwich on a surface. Pulses in sync with the float.
+───────────────────────────────────────────────────────── */
+.table-shadow {
+  position: absolute;
+  width: 110%;
+  height: 50px;
+  bottom: -55px;
+  left: -5%;
+  background: radial-gradient(ellipse at center, rgba(120, 80, 40, 0.18) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(6px);
+  transition: all 0.8s ease;
+  animation: shadowPulse 4s ease-in-out infinite;
+}
+
+/* Shadow breathes in sync with the sandwich float */
+@keyframes shadowPulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 0.85;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   PLATE
+   A flat ellipse beneath the sandwich, transformed with
+   rotateX(70deg) to match the isometric perspective.
+   Multiple box-shadows create a realistic ceramic look.
+───────────────────────────────────────────────────────── */
+.plate {
+  position: absolute;
+  width: 130%;
+  height: 60%;
+  bottom: -40px;
+  left: -15%;
+  border-radius: 50%;
+  /* Radial gradient gives the plate a subtle 3D dome shading */
+  background: radial-gradient(ellipse at 40% 40%, #ffffff 0%, var(--plate-color) 60%, #ede4d8 100%);
+  box-shadow:
+    0 8px 30px var(--plate-shadow),
+    /* drop shadow */
+    inset 0 -4px 12px rgba(0, 0, 0, 0.04),
+    /* bottom inner shadow */
+    inset 0 2px 8px rgba(255, 255, 255, 0.6);
+  /* top inner highlight */
+  transform: rotateX(70deg);
+  transform-style: preserve-3d;
+  z-index: -1;
+  animation: sandwichAssemble 1.2s ease-out forwards;
+}
+
+/* Inner ring decoration on the plate */
+.plate::after {
+  content: "";
+  position: absolute;
+  width: 85%;
+  height: 85%;
+  top: 7.5%;
+  left: 7.5%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.04);
+}
+
+/* ─────────────────────────────────────────────────────────
+   BREAD SLICES
+   Each bread div has two children:
+   .top    — the visible face of the bread
+   .bottom — the angled crust/side visible in 3D
+   
+   Both are rotateX(70deg) rotate(30deg) to create
+   the isometric look. Pseudo-elements (:before/:after)
+   on .bottom add extra side faces for 3D depth.
+   
+   Transition uses cubic-bezier(0.34,1.56,0.64,1) for
+   a bouncy spring feel on hover.
+───────────────────────────────────────────────────────── */
+.content .bread {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* spring bounce */
+}
+
+/* --- Bottom bread slice (3rd child because plate & shadow come first) --- */
+.content .bread:nth-child(3) {
+  left: 30px;
+  bottom: -5%;
+}
+
+.content .bread:nth-child(3) .top {
+  background-color: var(--bread-dark);
+  box-shadow: inset 0px 0px 0px 5px var(--bread-darker);
+  /* border-like inset */
+}
+
+.content .bread:nth-child(3) .bottom {
+  transition: all 1s ease;
+  background-image: linear-gradient(60deg,
+      var(--bread-gradient-light) 63%,
+      var(--bread-gradient-dark) 65%);
+  /* Multiple shadows: contact shadow, ambient occlusion, far shadow */
+  box-shadow: 5px 21px 14px 0px rgba(0, 0, 0, 0.1),
+    2px 6px 6px -3px rgba(0, 0, 0, 0.2), 57px 55px 36px -3px rgba(0, 0, 0, 0.1),
+    77px 55px 36px -33px rgba(0, 0, 0, 0.05);
+}
+
+.content .bread:nth-child(3) .bottom:after {
+  background-color: var(--bread-gradient-dark);
+}
+
+.content .bread:nth-child(3) .bottom:before {
+  background-color: var(--bread-gradient-light);
+}
+
+/* --- Top bread bun (4th child) --- */
+.content .bread:nth-child(4) {
+  left: 30px;
+  bottom: 15%;
+  z-index: 2;
+  transform: rotate(5deg);
+  /* slight natural tilt */
+}
+
+.content .bread:nth-child(4) .top {
+  /* Combined inset glow + border effect */
+  box-shadow: inset 16px 16px 30px -5px rgba(255, 255, 255, 0.24),
+    inset 0px 0px 0px 5px var(--bread-medium);
+  overflow: hidden;
+  /* clips the shine pseudo-element */
+}
+
+/* Glossy highlight on the top bun — like a bakery photo */
+.content .bread:nth-child(4) .top::after {
+  content: "";
+  position: absolute;
+  width: 60%;
+  height: 35%;
+  top: 12%;
+  left: 18%;
+  background: linear-gradient(180deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      /* bright at top */
+      rgba(255, 255, 255, 0) 100%
+      /* fades to transparent */
+    );
+  border-radius: 50%;
+  transform: rotate(-10deg);
+  pointer-events: none;
+}
+
+.content .bread:nth-child(4) .bottom {
+  transition: all 1s ease;
+  box-shadow: 9px 24px 24px -10px rgba(0, 0, 0, 0.2);
+}
+
+.content .bread:nth-child(4) .bottom:before {
+  background-color: var(--bread-medium-alt);
+  transform: rotate(-30deg) rotateY(17deg);
+  left: -11px;
+  bottom: -3px;
+  width: 52px;
+  height: 125px;
+}
+
+.content .bread:nth-child(4) .bottom:after {
+  background-color: var(--bread-medium);
+  transform: rotate(0deg) rotateY(80deg);
+  right: 14px;
+  bottom: 160px;
+  width: 44px;
+}
+
+/* Shared .top face styles for both bread slices */
+.content .bread .top {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bread-light);
+  transform-style: preserve-3d;
+  transform: rotateX(70deg) rotate(30deg);
+  /* isometric angle */
+  bottom: 0;
+  border-radius: 50px;
+  position: absolute;
+  box-shadow: inset 0px 0px 0px 5px var(--bread-medium);
+}
+
+/* Shared .bottom (side/crust) styles */
+.content .bread .bottom {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(60deg,
+      var(--bread-medium-alt) 63%,
+      var(--bread-medium) 65%);
+  transform-style: preserve-3d;
+  transform: rotateX(70deg) rotate(30deg);
+  bottom: -30px;
+  /* offset below .top to show thickness */
+  right: 0px;
+  border-radius: 50px;
+  position: absolute;
+}
+
+/* Side faces of the bread (pseudo-elements) */
+.content .bread .bottom:before,
+.content .bread .bottom:after {
+  content: "";
+  position: absolute;
+  height: 110px;
+  border-radius: 20px;
+}
+
+.content .bread .bottom:before {
+  background-color: var(--bread-medium-alt);
+  transform: rotate(-40deg) rotateY(17deg);
+  /* angled left side */
+  left: -5px;
+  bottom: -9px;
+  width: 55px;
+}
+
+.content .bread .bottom:after {
+  background-color: var(--bread-medium);
+  transform: rotate(0deg) rotateY(80deg);
+  /* angled right side */
+  right: -2px;
+  bottom: 150px;
+  width: 44px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   SESAME SEEDS
+   Small cream-coloured ellipses scattered on the top bun.
+   Each seed has a subtle gradient and shadow for realism.
+───────────────────────────────────────────────────────── */
+.sesame {
+  position: absolute;
+  width: 14px;
+  height: 8px;
+  background: linear-gradient(135deg, var(--sesame) 40%, var(--sesame-dark) 100%);
+  border-radius: 50%;
+  z-index: 5;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Each seed is positioned & rotated slightly differently */
+.seed1 {
+  top: 22%;
+  left: 30%;
+  transform: rotate(15deg);
+}
+
+.seed2 {
+  top: 18%;
+  left: 55%;
+  transform: rotate(-25deg);
+}
+
+.seed3 {
+  top: 35%;
+  left: 20%;
+  transform: rotate(50deg);
+}
+
+.seed4 {
+  top: 30%;
+  left: 65%;
+  transform: rotate(-10deg);
+}
+
+.seed5 {
+  top: 45%;
+  left: 40%;
+  transform: rotate(30deg);
+}
+
+.seed6 {
+  top: 40%;
+  left: 58%;
+  transform: rotate(-40deg);
+}
+
+.seed7 {
+  top: 50%;
+  left: 48%;
+  transform: rotate(5deg);
+}
+
+/* ─────────────────────────────────────────────────────────
+   LETTUCE
+   Built from 6 overlapping circles (.leaves span) that
+   create a ruffled, organic leaf shape. The .tale section
+   adds thin white stem/vein lines at low opacity.
+   
+   Uses the same rotateX(70deg) isometric transform.
+   Transition has a 0.3s delay for staggered hover effect.
+───────────────────────────────────────────────────────── */
+.content .lettuce {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: -6%;
+  transition: all 0.8s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: rotate(0deg);
+  left: 2%;
+}
+
+.content .lettuce .leaves {
+  transform-style: preserve-3d;
+  transform: rotateX(70deg) rotate(20deg);
+  bottom: 10px;
+  position: absolute;
+  width: 80%;
+  height: 70%;
+}
+
+.content .lettuce .leaves span {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+  background-color: var(--lettuce-green);
+  transition: box-shadow 0.6s ease;
+  /* smooth glow transition on hover */
+}
+
+/* Main leaf — with inner shadow for depth + subtle highlight */
+.content .lettuce .leaves span:nth-child(1) {
+  border-radius: 80px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  box-shadow: inset -5px -17px 0px -5px rgba(0, 0, 0, 0.06),
+    inset 3px 5px 12px -4px rgba(255, 255, 255, 0.25);
+  z-index: 1;
+}
+
+/* Top-left leaf */
+.content .lettuce .leaves span:nth-child(2) {
+  left: -20px;
+  top: -20px;
+}
+
+/* Top-right leaf */
+.content .lettuce .leaves span:nth-child(3) {
+  right: -20px;
+  top: -20px;
+  box-shadow: inset -4px -14px 0px -4px rgba(0, 0, 0, 0.06);
+}
+
+/* Bottom leaf accent */
+.content .lettuce .leaves span:nth-child(4) {
+  width: 34%;
+  transform: rotate(0deg);
+  border-radius: 30px;
+  left: 28%;
+  bottom: -9%;
+  z-index: 1;
+  box-shadow: inset -3px -13px 0px -6px rgba(0, 0, 0, 0.06);
+}
+
+/* Right leaf accent */
+.content .lettuce .leaves span:nth-child(5) {
+  width: 34%;
+  height: 34%;
+  transform: rotate(0deg);
+  border-radius: 100%;
+  left: 77%;
+  bottom: 29%;
+  z-index: 1;
+  box-shadow: inset -12px -1px 0px -6px rgba(0, 0, 0, 0.06);
+}
+
+/* Left leaf accent */
+.content .lettuce .leaves span:nth-child(6) {
+  width: 34%;
+  height: 48%;
+  transform: rotate(0deg);
+  border-radius: 100%;
+  left: -7%;
+  bottom: 24%;
+  z-index: 1;
+}
+
+/* Lettuce stem/vein lines (semi-transparent white) */
+.content .lettuce .tale {
+  width: 15px;
+  height: 70%;
+  background-color: white;
+  position: absolute;
+  left: 33%;
+  bottom: 4%;
+  border-radius: 50px;
+  opacity: 0.2;
+  transform-style: preserve-3d;
+  transform: rotateX(70deg) rotate(20deg);
+}
+
+.content .lettuce .tale span {
+  position: absolute;
+  background-color: inherit;
+  width: 80%;
+  height: 50%;
+  border-radius: 50px;
+}
+
+.content .lettuce .tale span:nth-child(1) {
+  left: -190%;
+  top: 10%;
+  transform: rotate(-40deg);
+  width: 10px;
+}
+
+.content .lettuce .tale span:nth-child(2) {
+  right: -190%;
+  top: 10%;
+  transform: rotate(40deg);
+}
+
+.content .lettuce .tale span:nth-child(3) {
+  transform: rotate(-70deg);
+  border-radius: 30px;
+  top: 50%;
+  left: -210%;
+  width: 8px;
+  height: 30%;
+}
+
+.content .lettuce .tale span:nth-child(4) {
+  transform: rotate(70deg);
+  border-radius: 30px;
+  top: 55%;
+  right: -260%;
+  height: 40%;
+}
+
+/* ─────────────────────────────────────────────────────────
+   TOMATO SLICE
+   A circular red slice viewed at an isometric angle.
+   
+   Structure:
+   - ::before = the red face with a radial shine highlight
+   - ::after  = a darker circle offset below for 3D thickness
+   - span:nth-child(1) = dark inner shadow (opacity 0.1)
+   - span(2-3) = lighter vertical seed chambers
+   - span(4-5) = large flesh overlays that add dimension
+   - .seed1/.seed2 = white seed dots with ::before/::after
+     for additional seeds (3 seeds per cluster)
+───────────────────────────────────────────────────────── */
+.content .tomato {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: -25%;
+  transition: all 0.8s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: rotate(-3deg);
+}
+
+.content .tomato .tomatoBody {
+  transform-style: preserve-3d;
+  transform: rotateX(72deg) rotate(0deg);
+  left: 8%;
+  position: absolute;
+  width: 70%;
+  height: 80%;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+/* Tomato face — with radial shine for a juicy look */
+.content .tomato .tomatoBody:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--tomato-red);
+  border-radius: 100%;
+  /* Radial highlight gives a wet, glossy appearance */
+  background-image: radial-gradient(ellipse at 35% 30%,
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 55%);
+}
+
+/* Tomato thickness — darker red circle offset below */
+.content .tomato .tomatoBody:after {
+  content: "";
+  position: absolute;
+  width: 101%;
+  height: 111%;
+  background-color: var(--tomato-dark);
+  bottom: -11%;
+  border-radius: 100%;
+  z-index: -3;
+}
+
+.content .tomato .tomatoBody span {
+  position: absolute;
+}
+
+/* Inner dark shadow disc */
+.content .tomato .tomatoBody span:nth-child(1) {
+  width: 80%;
+  height: 80%;
+  border-radius: 100%;
+  background-color: black;
+  opacity: 0.1;
+  z-index: 1;
+  transform: rotate(-10deg);
+}
+
+/* Left seed chamber */
+.content .tomato .tomatoBody span:nth-child(2) {
+  width: 20%;
+  height: 44%;
+  border-radius: 100%;
+  left: 35%;
+  transform: rotate(-10deg);
+  background-color: var(--tomato-red);
+  z-index: 1;
+}
+
+/* Right seed chamber */
+.content .tomato .tomatoBody span:nth-child(3) {
+  width: 20%;
+  height: 44%;
+  border-radius: 100%;
+  right: 35%;
+  transform: rotate(10deg);
+  background-color: var(--tomato-red);
+  z-index: 1;
+}
+
+/* Left flesh overlay */
+.content .tomato .tomatoBody span:nth-child(4) {
+  width: 70%;
+  height: 95%;
+  border-radius: 100%;
+  left: -1%;
+  top: -2%;
+  background-color: var(--tomato-red);
+}
+
+/* Right flesh overlay */
+.content .tomato .tomatoBody span:nth-child(5) {
+  width: 70%;
+  height: 95%;
+  border-radius: 100%;
+  right: -1%;
+  top: -5%;
+  background-color: var(--tomato-red);
+}
+
+/* Left seed cluster (3 seeds via element + ::before + ::after) */
+.content .tomato .tomatoBody .seed1 {
+  position: absolute;
+  width: 15px;
+  height: 12px;
+  border-radius: 100%;
+  background-color: white;
+  left: 20%;
+  opacity: 0.2;
+}
+
+.content .tomato .tomatoBody .seed1:before,
+.content .tomato .tomatoBody .seed1:after {
+  position: absolute;
+  content: "";
+  background-color: inherit;
+  width: inherit;
+  height: inherit;
+  border-radius: 100%;
+}
+
+.content .tomato .tomatoBody .seed1:before {
+  left: 5px;
+  top: -30px;
+}
+
+.content .tomato .tomatoBody .seed1:after {
+  left: 15px;
+  bottom: -30px;
+}
+
+/* Right seed cluster */
+.content .tomato .tomatoBody .seed2 {
+  position: absolute;
+  width: 15px;
+  height: 12px;
+  border-radius: 100%;
+  background-color: white;
+  right: 20%;
+  opacity: 0.2;
+}
+
+.content .tomato .tomatoBody .seed2:before,
+.content .tomato .tomatoBody .seed2:after {
+  position: absolute;
+  content: "";
+  background-color: inherit;
+  width: inherit;
+  height: inherit;
+  border-radius: 100%;
+}
+
+.content .tomato .tomatoBody .seed2:before {
+  right: 5px;
+  top: -30px;
+}
+
+.content .tomato .tomatoBody .seed2:after {
+  right: 15px;
+  bottom: -30px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   CHEESE
+   A swiss-cheese slice with holes created using inset
+   box-shadows on <span> elements. The main div also uses
+   a massive inset box-shadow to fill with yellow.
+   
+   ::before adds an extra cheese blob above the main body.
+   ::after adds a glossy radial highlight.
+   
+   Transition has 0.1s delay for staggered hover timing.
+───────────────────────────────────────────────────────── */
+.content .cheese {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  bottom: 0%;
+  left: 1%;
+  background-color: transparent;
+  transform-style: preserve-3d;
+  transform: rotateX(72deg) rotate(0deg);
+  /* Massive inset shadow fills the shape with cheese yellow */
+  box-shadow: inset -27px 0px 0px 50px var(--cheese-yellow);
+  border-radius: 30px;
+  transition: all 0.8s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Extra cheese blob above main body */
+.content .cheese:before {
+  position: absolute;
+  content: "";
+  width: 70%;
+  height: 30%;
+  background-color: var(--cheese-yellow);
+  left: 10%;
+  border-radius: 100%;
+  bottom: 79%;
+}
+
+/* Glossy radial highlight on cheese */
+.content .cheese:after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 40%;
+  top: 15%;
+  left: 25%;
+  background: radial-gradient(ellipse at center,
+      rgba(255, 255, 255, 0.2) 0%,
+      transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Cheese holes — circles with inset box-shadow cutouts */
+.content .cheese span {
+  position: absolute;
+  border-radius: 100%;
+}
+
+.content .cheese span:nth-child(1) {
+  width: 45%;
+  height: 40%;
+  left: 1%;
+  bottom: 50%;
+  box-shadow: inset 0px 0px 0px 40px var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(2) {
+  width: 42%;
+  height: 39%;
+  left: 1%;
+  bottom: 22%;
+  box-shadow: inset 0px 0px 0px 44px var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(3) {
+  width: 55%;
+  height: 51%;
+  left: 29%;
+  bottom: 14%;
+  box-shadow: inset 0px 0px 0px 43px var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(4) {
+  width: 26%;
+  height: 24%;
+  left: 0%;
+  bottom: 9%;
+  box-shadow: inset 0px 0px 0px 28px var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(5) {
+  width: 51%;
+  height: 44%;
+  left: 35%;
+  bottom: 52%;
+  box-shadow: inset 0px 0px 0px 54px var(--cheese-yellow);
+}
+
+/* Overflow fill spans (solid cheese to cover edges) */
+.content .cheese span:nth-child(6) {
+  width: 51%;
+  height: 38%;
+  left: 15%;
+  bottom: -6%;
+  background-color: var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(7) {
+  width: 11%;
+  height: 68%;
+  left: -2%;
+  bottom: -4%;
+  background-color: var(--cheese-yellow);
+}
+
+.content .cheese span:nth-child(8) {
+  width: 11%;
+  height: 68%;
+  left: 91%;
+  bottom: 30%;
+  background-color: var(--cheese-yellow);
+}
+
+/* ─────────────────────────────────────────────────────────
+   ONION RING
+   Two concentric circles with translucent lavender borders.
+   Adds visual variety and realism to the layer stack.
+   The ring uses box-shadow for a soft glow effect.
+───────────────────────────────────────────────────────── */
+.content .onion {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  bottom: -2%;
+  left: 5%;
+  transition: all 0.8s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  /* doesn't interfere with hover */
+}
+
+.onion .ring {
+  position: absolute;
+  border-radius: 50%;
+  transform-style: preserve-3d;
+  transform: rotateX(72deg) rotate(10deg);
+  /* match isometric angle */
+}
+
+/* Outer ring — thicker border, subtle glow + shadow */
+.onion .ring.outer {
+  width: 55%;
+  height: 55%;
+  left: 18%;
+  top: 8%;
+  border: 8px solid var(--onion-outer);
+  box-shadow:
+    inset 0 0 10px rgba(255, 255, 255, 0.4),
+    /* inner glow */
+    0 3px 8px rgba(0, 0, 0, 0.08);
+  /* drop shadow */
+}
+
+/* Inner ring — thinner, subtler */
+.onion .ring.inner {
+  width: 38%;
+  height: 38%;
+  left: 26.5%;
+  top: 16.5%;
+  border: 5px solid var(--onion-inner);
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+}
+
+/* ─────────────────────────────────────────────────────────
+   HOVER: EXPLODED VIEW
+   On hover, each layer moves to a different vertical
+   position, spreading the sandwich apart so you can see
+   each ingredient. Each layer has a different transition
+   delay for a staggered cascade effect.
+───────────────────────────────────────────────────────── */
+
+/* Top bun flies up highest */
+.content:hover .bread:nth-child(4) {
+  animation: anime 2s ease infinite alternate;
+  transform: rotate(-3deg);
+  bottom: 80%;
+}
+
+.content:hover .bread:nth-child(4) .bottom {
+  box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.2);
+  /* shadow fades as bun rises */
+}
+
+/* Lettuce shifts up and rotates */
+.content:hover .lettuce {
+  transform: rotate(-8deg);
+  bottom: 5%;
+  animation: anime 2s ease infinite alternate;
+}
+
+/* Tomato shifts up and rotates opposite direction */
+.content:hover .tomato {
+  bottom: 0%;
+  transform: rotate(8deg);
+}
+
+/* Cheese lifts and rotates */
+.content:hover .cheese {
+  transform: rotateX(70deg) rotate(-10deg);
+  bottom: 42%;
+}
+
+/* Onion ring lifts into view */
+.content:hover .onion {
+  bottom: 18%;
+  left: 0%;
+  transform: rotate(-5deg);
+}
+
+/* Table shadow expands and fades on hover */
+.content:hover .table-shadow {
+  transform: scale(1.3);
+  opacity: 0.6;
+  bottom: -70px;
+}
+
+/* Subtle wobble animation used by top bun and lettuce */
+@keyframes anime {
+  0% {
+    transform: translateY(0px) rotate(-3deg);
+  }
+
+  100% {
+    transform: translateY(-8px) rotate(-1deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────
+   HOVER: INGREDIENT GLOW
+   Each ingredient gets a coloured outer glow on hover
+   for a premium, dynamic feel.
+───────────────────────────────────────────────────────── */
+
+/* Lettuce — green glow */
+.content:hover .lettuce .leaves span:nth-child(1) {
+  box-shadow: inset -5px -17px 0px -5px rgba(0, 0, 0, 0.06),
+    inset 3px 5px 12px -4px rgba(255, 255, 255, 0.25),
+    0 0 18px rgba(135, 204, 135, 0.3);
+}
+
+/* Tomato — red glow */
+.content:hover .tomato .tomatoBody:before {
+  box-shadow: 0 0 20px rgba(255, 73, 73, 0.25);
+}
+
+/* Cheese — golden glow (added to existing inset shadow) */
+.content:hover .cheese {
+  box-shadow: inset -27px 0px 0px 50px var(--cheese-yellow),
+    0 0 22px rgba(255, 227, 89, 0.25);
+}
+
+/* ─────────────────────────────────────────────────────────
+   RESPONSIVE
+   Scale down the sandwich on small screens.
+───────────────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .content {
+    transform: scale(0.75);
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}
