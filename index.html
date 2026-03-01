@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Sandwich — CSS Art</title>
+  <meta name="description"
+    content="A realistic 3D CSS sandwich with dynamic animations and interactive hover effects." />
+</head>
+
+<body>
+
+  <!-- ============================================
+         AMBIENT FLOATING PARTICLES
+         12 small coloured dots that float upward
+         across the screen for a dreamy atmosphere.
+    ============================================= -->
+  <div class="particles">
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+    <span></span><span></span><span></span>
+  </div>
+
+  <!-- ============================================
+         PAGE TITLE — uses Playfair Display serif font
+         with a decorative underline via CSS ::after
+    ============================================= -->
+  <h1 class="title">The Sandwich</h1>
+
+  <!-- ============================================
+         MAIN SANDWICH CONTAINER
+         - perspective: 800px gives the 3D depth
+         - floats up/down with an idle animation
+         - assembles (fades + scales) on page load
+         - on hover, layers spread out (exploded view)
+    ============================================= -->
+  <div class="content" id="sandwich">
+
+    <!-- Blurred elliptical shadow on the "table" surface -->
+    <div class="table-shadow"></div>
+
+    <!-- Ceramic plate beneath the sandwich (rotateX 70deg to match perspective) -->
+    <div class="plate"></div>
+
+    <!-- ========== BOTTOM BREAD ========== 
+           The flat base slice. Uses two divs:
+           .bottom = the side/crust visible at an angle
+           .top    = the face of the slice
+      -->
+    <div class="bread layer" style="--layer-index: 0;">
+      <div class="bottom"></div>
+      <div class="top"></div>
+    </div>
+
+    <!-- ========== TOP BREAD (BUN) ========== 
+           Same structure as bottom bread but sits higher.
+           Contains sesame seed divs positioned via CSS.
+      -->
+    <div class="bread layer" style="--layer-index: 5;">
+      <div class="bottom"></div>
+      <div class="top">
+        <!-- 7 sesame seeds scattered on the bun surface -->
+        <div class="sesame seed1"></div>
+        <div class="sesame seed2"></div>
+        <div class="sesame seed3"></div>
+        <div class="sesame seed4"></div>
+        <div class="sesame seed5"></div>
+        <div class="sesame seed6"></div>
+        <div class="sesame seed7"></div>
+      </div>
+    </div>
+
+    <!-- ========== LETTUCE ==========
+           .leaves = 6 overlapping green circles that
+                     form the ruffled lettuce shape
+           .tale   = thin white veins/stems (semi-transparent)
+      -->
+    <div class="lettuce layer" style="--layer-index: 3;">
+      <div class="leaves">
+        <span></span> <!-- main leaf body -->
+        <span></span> <!-- offset top-left leaf -->
+        <span></span> <!-- offset top-right leaf -->
+        <span></span> <!-- bottom accent leaf -->
+        <span></span> <!-- right accent leaf -->
+        <span></span> <!-- left accent leaf -->
+      </div>
+      <div class="tale">
+        <span></span> <!-- left stem branch -->
+        <span></span> <!-- right stem branch -->
+        <span></span> <!-- lower-left vein -->
+        <span></span> <!-- lower-right vein -->
+      </div>
+    </div>
+
+    <!-- ========== TOMATO ==========
+           .tomatoBody = the main tomato slice
+           - Uses ::before for the red face + radial shine
+           - Uses ::after for the darker bottom edge
+           - 5 <span> elements create the inner seed pattern
+           - .seed1/.seed2 = white translucent seed dots
+      -->
+    <div class="tomato layer" style="--layer-index: 1;">
+      <div class="tomatoBody">
+        <span></span> <!-- dark inner shadow circle -->
+        <span></span> <!-- left seed chamber -->
+        <span></span> <!-- right seed chamber -->
+        <span></span> <!-- left flesh overlay -->
+        <span></span> <!-- right flesh overlay -->
+        <div class="seed1"></div> <!-- left seed cluster (+ ::before/::after) -->
+        <div class="seed2"></div> <!-- right seed cluster (+ ::before/::after) -->
+      </div>
+    </div>
+
+    <!-- ========== CHEESE ==========
+           Built with box-shadow tricks:
+           - Main div uses a massive inset box-shadow
+           - 8 <span> children create the holey swiss-cheese texture
+           - ::before adds extra cheese above the main body
+           - ::after adds a glossy radial highlight
+      -->
+    <div class="cheese layer" style="--layer-index: 2;">
+      <span></span> <!-- hole 1 -->
+      <span></span> <!-- hole 2 -->
+      <span></span> <!-- hole 3 -->
+      <span></span> <!-- hole 4 -->
+      <span></span> <!-- hole 5 -->
+      <span></span> <!-- overflow fill 1 -->
+      <span></span> <!-- overflow fill 2 -->
+      <span></span> <!-- overflow fill 3 -->
+    </div>
+
+    <!-- ========== ONION RING ==========
+           Two concentric circles with pastel purple borders.
+           Adds variety and realism to the sandwich layers.
+      -->
+    <div class="onion layer" style="--layer-index: 4;">
+      <div class="ring outer"></div> <!-- outer ring with glow -->
+      <div class="ring inner"></div> <!-- inner ring -->
+    </div>
+  </div>
+
+  <!-- Hover hint — fades in after sandwich assembles -->
+  <p class="hint">Hover to explore layers ✨</p>
+
+</body>
+
+</html>
